@@ -21,7 +21,7 @@
 
 
 /**
- * Module to generate a directed graph layout using a Sugiyama algorithm.
+ * Module to generate a directed graph layout using a Sugiyama based algorithm.
  * @module graph/DirectedGraphLayout
  * @see graph.DirectedGraphLayout
  */
@@ -35,23 +35,21 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 	 * work only with integers. Compacting the graph with compact allows for x values smaller
 	 * than unit size one. Therefore the order of applying these methods is important.
 	 * @class graph.DirectedGraphLayout
-	 * @param {Object} args
-	 * @param {Integer} args.numLayer number of layers
-	 * @param {Integer} args.incVirt increment between VirtualGraphNodes
-	 * @param {Integer} args.inc increment between GraphNodes
 	 * @property {Integer} numLayer number of layers in graph
 	 * @property {Integer} maxNodesAllLayers maximum number of nodes on all layers
 	 * @property {Array} numPerLayers fast lookup to assign new x coordinates for virtual nodes
-	 * @property {Array} nodes internal array to hold graph nodes. NOTE: first dim is y, second is x!
+	 * @property {Array} nodes holds graph nodes. NOTE: first dim is y, second is x!
 	 * @property {Number} incVirt increment between virtual nodes when setting layout position. 1/incVirt has to be an integer.
 	 * @property {Integer} inc increment between nodes when setting layout position
+	 * @property {Integer} numRepeat number of passes when compacting graph
+	 * @property {Boolean} compacted compact graph
 	 */
 	return declare(null, /** @lends graph.DirectedGraphLayout.prototype */ {
 
 		/* NOTES:
 		 * Remember that in js arrays are passed by reference and so are objects.
 		 * There is a tradeoff between separation of logic and performance:
-		 * More separation means looping through the same loops again which reduces performance.
+		 * More separation means looping through the same loops again which reduces performance but plays nice with memory
 		 */
 		numLayer: 0,
 		maxNodesAllLayers: 0,

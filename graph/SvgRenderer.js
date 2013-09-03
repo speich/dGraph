@@ -19,10 +19,6 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(l
 	 * @property {String} canvas name of HTMLElement to append svg to
 	 * @property {Number} meshWidth width of grid mesh
 	 * @property {Number} meshHeight height of grid mesh
-	 * @property {Function} [onNodeClick] event handler called when clicking node
-	 * @property {Function} [onNodeOver] event handler called when mouse is over node
-	 * @property {Function} [onNodeOut] event handler called when mousing out from node
-	 * @property {Function} [onNodeDblClick] event handler when double clicking node
 	 * @property {Boolean} [invert] renders the graph inverted
 	 * @returns {graph/SvgRenderer}
 	 */
