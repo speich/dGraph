@@ -1,7 +1,3 @@
-.node {
-	cursor: pointer;
-}
-
 .node circle {
 	stroke: #999999;
 	stroke-width: 1px;
@@ -26,7 +22,7 @@
 }
 
 line {
-	stroke: #eeeeee;
+	stroke: #eaeaea;
 	stroke-width: 1px;
 }
 
@@ -41,27 +37,4 @@ line {
 
 .targetEdgeHighlighted {
 	stroke: #aa0000;
-}
-
-.rawNode circle {
-	fill: #cccc00;
-}
-
-.circle {
-	float: left;
-	height: 8px;
-	width: 8px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	border: 1px solid #999999;
-	margin-top: 3px;
-	margin-right: 4px !important;
-}
-
-.circleRaw {
-	background-color: #CCCC00;
-}
-
-.circleDerived {
-	background-color: #99cccc;
 }
