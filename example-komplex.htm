@@ -66,7 +66,7 @@ require([
             { label: 'Poecile',  layer: 4},
             { label: 'Asio',  layer: 1},
             { label: 'Strix',  layer: 2},
-            { label: 'Hippophaë',  layer: 1},
+            { label: 'Hippophae',  layer: 1},
             { label: 'Silvia',  layer: 2},
             { label: 'Columba',  layer: 1},
             { label: 'Lanius',  layer: 1},
@@ -133,9 +133,10 @@ require([
     svg = new SvgRenderer({
         canvas: 'graphCanvas',
         gridSize: {
-            meshWidth: 100,
-            meshHeight: 120
-        }
+            meshWidth: 90,
+            meshHeight: 100
+        },
+        renderGrid: false
     });
 
     graph.initNodeList(graphData.nodeList);

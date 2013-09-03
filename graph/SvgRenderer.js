@@ -34,6 +34,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(l
 		svgNs: 'http://www.w3.org/2000/svg',
 		invert: false,
 		gridLabel: 'layer',
+		renderGrid: true,
 
 		constructor: function(args) {
 			lang.mixin(this, args);
@@ -293,7 +294,9 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(l
 				height = this.gridSize.meshHeight * (graph.numLayer + 1);
 
 			this.initSVG(width, height);
-			this.drawGrid(width, height);
+			if (this.renderGrid) {
+				this.drawGrid(width, height);
+			}
 			this.placeEdges(graph.nodes);
 			this.placeNodes(graph.nodes);
 		}

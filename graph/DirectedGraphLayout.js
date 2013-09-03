@@ -66,7 +66,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 			lang.mixin(this, args);
 		},
 
-
 		/**
 		 * Maps the node list to a two dim array the size of the grid.
 		 * nodes are stored as xy vectors of the grid. The grid is
