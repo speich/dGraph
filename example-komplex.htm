@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<title>Layered DirectedGraph</title>
+<link href="graph/resources/dgraph.css" type="text/css" rel="stylesheet">
+</head>
+
+<body class="dgraph">
+<div id="graphCanvas"></div>
+<script type="text/javascript">
+var dojoConfig = {
+	async: true,
+	packages: [
+		{name: 'graph', location: '/graph'}
+	]
+};
+</script>
+<script type="text/javascript" src="/dojo/1.9.1/dojo/dojo.js"></script>
+<script type="text/javascript">
+require([
+	'graph/DirectedGraphLayout',
+	'graph/SvgRenderer',
+    'dojo/domReady!'
+], function(DirectedGraphLayout, SvgRenderer) {
+    var graph, svg,
+        graphData = {"numLayer":10,"maxPerLayer":4,"nodeList":[{"label":"LBMWNWENT [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBAUFN","col":"LBMWNWENT"},"selected":false},{"label":"LBPFZLAGE [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBAUFN","col":"LBPFZLAGE"},"selected":false},{"label":"LBWNWENT [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBAUFN","col":"LBWNWENT"},"selected":false},{"label":"LBWNWENT [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBAUFN_V100","col":"LBWNWENT"},"selected":false},{"label":"LBWNWENT [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBAUFN_V210","col":"LBWNWENT"},"selected":false},{"label":"KRONHOE [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBRAST","col":"KRONHOE"},"selected":false},{"label":"LBBODBED [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBRAST","col":"LBBODBED"},"selected":false},{"label":"LBRASTLAGE [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBRAST","col":"LBRASTLAGE"},"selected":false},{"label":"LBWALDISTYP [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBWALDISLIN","col":"LBWALDISTYP"},"selected":false},{"label":"LEN [LBI]","layer":0,"isRaw":true,"id":{"owner":"LBI","table":"LBWALDISLIN","col":"LEN"},"selected":false},{"label":"MANWNWENT [LFA]","layer":0,"isRaw":true,"id":{"owner":"LFA","table":"HITAMWNWENT","col":"MANWNWENT"},"selected":false},{"label":"BESTSTAB [LFI]","layer":0,"isRaw":true,"id":{"owner":"LFI","table":"WA","col":"BESTSTAB"},"selected":false},{"label":"WNWENT [LFI]","layer":0,"isRaw":true,"id":{"owner":"LFI","table":"WA","col":"WNWENT"},"selected":false},{"label":"WTYP [LFI]","layer":0,"isRaw":true,"id":{"owner":"LFI","table":"WA","col":"WTYP"},"selected":false},{"label":"ZUGANG [LFI]","layer":0,"isRaw":true,"id":{"owner":"LFI","table":"WA","col":"ZUGANG"},"selected":false},{"label":"WTYP [150]","layer":1,"isRaw":false,"id":{"invNr":150,"varNr":16},"selected":false},{"label":"KOMBWALDENT [150]","layer":3,"isRaw":false,"id":{"invNr":150,"varNr":329},"selected":false},{"label":"WNWENT [150]","layer":2,"isRaw":false,"id":{"invNr":150,"varNr":82},"selected":false},{"label":"LBWNWENT [150]","layer":1,"isRaw":false,"id":{"invNr":150,"varNr":87},"selected":false},{"label":"KOMBWALDENT [250]","layer":4,"isRaw":false,"id":{"invNr":250,"varNr":329},"selected":false},{"label":"WNWENT [250]","layer":1,"isRaw":false,"id":{"invNr":250,"varNr":82},"selected":false},{"label":"LBWNWENT [250]","layer":1,"isRaw":false,"id":{"invNr":250,"varNr":87},"selected":false},{"label":"KOMBWALDENT [350]","layer":5,"isRaw":false,"id":{"invNr":350,"varNr":329},"selected":false},{"label":"DGRAD25 [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":368},"selected":false},{"label":"WBREITESOLL [350]","layer":2,"isRaw":false,"id":{"invNr":350,"varNr":373},"selected":false},{"label":"WBREITE [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":374},"selected":false},{"label":"LBMWNWENT [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":390},"selected":false},{"label":"WABST [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":391},"selected":false},{"label":"LBPFZLAGE [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":393},"selected":false},{"label":"KRONHOE [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":414},"selected":false},{"label":"LBBODBED [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":417},"selected":false},{"label":"LBRASTLAGE [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":420},"selected":false},{"label":"ZWALD [350]","layer":6,"isRaw":false,"id":{"invNr":350,"varNr":434},"selected":false},{"label":"LBWNWENTKNOSSOS [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":482},"selected":false},{"label":"BESTSTAB [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":558},"selected":false},{"label":"ZUGANG [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":81},"selected":false},{"label":"WNWENT [350]","layer":1,"isRaw":false,"id":{"invNr":350,"varNr":82},"selected":false},{"label":"LBWNWENT [350]","layer":3,"isRaw":false,"id":{"invNr":350,"varNr":87},"selected":false},{"label":"BESTSTABVOR [452]","layer":9,"isRaw":false,"id":{"invNr":452,"varNr":1261},"selected":true},{"label":"ZGWALD34 [452]","layer":8,"isRaw":false,"id":{"invNr":452,"varNr":1429},"selected":false},{"label":"KOMBWALDENT [452]","layer":6,"isRaw":false,"id":{"invNr":452,"varNr":329},"selected":false},{"label":"ZWALD [452]","layer":7,"isRaw":false,"id":{"invNr":452,"varNr":434},"selected":false},{"label":"ZUGANG [452]","layer":1,"isRaw":false,"id":{"invNr":452,"varNr":81},"selected":false},{"label":"WNWENT [452]","layer":1,"isRaw":false,"id":{"invNr":452,"varNr":82},"selected":false},{"label":"LBWNWENT [452]","layer":1,"isRaw":false,"id":{"invNr":452,"varNr":87},"selected":false}],"adjList":[[26],[28],[33,37,44],[18],[21],[23,29],[23,30],[23,31],[25,27],[25,27],[22],[34],[17,20,36,43],[15],[35,42],[17],[19],[16],[16],[22],[19],[19],[32,40],[24,37],[37],[37],[37],[37],[37],[37],[37],[37],[39],[37],[38],[32],[22],[22],[],[38],[41],[39],[41],[40],[40]]};
+
+    graph = new DirectedGraphLayout({
+        numLayer: graphData.numLayer
+    });
+    svg = new SvgRenderer({
+        canvas: 'graphCanvas',
+        gridSize: {
+            meshWidth: 100,
+            meshHeight: 120
+        }
+    });
+
+    graph.initNodeList(graphData.nodeList);
+    graph.addEdges(graphData.nodeList, graphData.adjList);
+    graph.expandNodeList();
+    graph.minimizeCrossings(20);
+    graph.compact();
+    graph.setLayoutPosition();
+
+    svg.render(graph);
+});
+</script>
+</body>
+</html>
