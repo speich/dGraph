@@ -59,6 +59,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 		nodes: null,
 		incVirt: 0.2,
 		inc: 1,
+		numRepeat: 20,
+		compacted: true,
 
 		constructor: function(args) {
 			this.nodes = [];
@@ -374,9 +376,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 		 * srcNodes and trgNodes are kept unchanged. Otherwise we
 		 * would have to do a lot of updating these lists.
 		 * numSweep: Up and down counts as one sweep
-		 * @param {Number} numRepeat number of sweeps
+		 * @param {Number} [numRepeat] number of sweeps
 		 */
 		minimizeCrossings: function(numRepeat) {
+
+			numRepeat = numRepeat || this.numRepeat;
+
 			/*
 			 // TODO: take into account two or more nodes on layer having same median
 			 // TODO: also use countCrossings instead of numRepeat
@@ -770,9 +775,23 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 			}
 
 			return 0;
+		},
+
+		/**
+		 * Convenience function to render graph.
+		 * @param {Object} graphData
+		 * @param {Object} graphData.nodeList
+		 * @param {Object} graphData.adjList
+		 */
+		render: function(graphData) {
+			this.initNodeList(graphData.nodeList);
+			this.addEdges(graphData.nodeList, graphData.adjList);
+			this.expandNodeList();
+			this.minimizeCrossings();
+			if (this.compacted) {
+				this.compact();
+			}
+			this.setLayoutPosition();
 		}
 	});
 });
-
-
-

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de" dir="ltr">
 <head>
-<title>Layered DirectedGraph</title>
+<title>Example of a simple Layered DirectedGraph</title>
 <link href="graph/resources/dgraph.css" type="text/css" rel="stylesheet">
 <style type="text/css">
 #graphCanvas {
@@ -51,7 +51,8 @@ require([
         };
 
     graph = new DirectedGraphLayout({
-        numLayer: graphData.numLayer
+        numLayer: graphData.numLayer,
+        compacted: false
     });
     svg = new SvgRenderer({
         canvas: 'graphCanvas',
@@ -61,13 +62,7 @@ require([
         }
     });
 
-    graph.initNodeList(graphData.nodeList);
-    graph.addEdges(graphData.nodeList, graphData.adjList);
-    graph.expandNodeList();
-    graph.minimizeCrossings(20);
-   // graph.compact();
-    graph.setLayoutPosition();
-
+    graph.render(graphData);
     svg.render(graph);
 });
 </script>
