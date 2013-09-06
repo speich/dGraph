@@ -7,7 +7,7 @@ library needs to be a node list with its corresponding adjacency list. Each node
 at least the two properties 'label' and 'layer'. See the two provided example pages
 [example-simple.htm](example-simple.htm) and [example-complex.htm](example-complex.htm) for more information.
 
-![example-complex](resources/example-complex.gif "complex example of a graph drawing")
+![example-complex](graph/resources/example-complex.gif "complex example of a graph drawing")
 
 ## History
 Originally developed for the Data Analysis Software NAFIDAS of the [Swiss National Forest Inventory](http://www.lfi.ch)
