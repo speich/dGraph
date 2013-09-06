@@ -23,7 +23,7 @@ to visualize dependencies of database variables.
 * Highlight connected parent and/or child nodes
 
 ## Dependencies
-* dojo toolkit 1.9.1, mainly for the AMD loader to required in the modules
+* dojo toolkit 1.9.1, mainly for the AMD loader to require in the modules
 
 ## Installation
 See the two example pages [example-simple.htm](example-simple.htm) and [example-complex.htm](example-complex.htm)

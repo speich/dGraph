@@ -187,7 +187,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 		/**
 		 * Inserts virtual nodes and edges to create a proper graph.
 		 * Edges spanning more than one layer will be split into multiple edges of unit length.
-		 * This is done by shortening, e.g decrementing long edges continously until it has unit length.
+		 * This is done by shortening, e.g decrementing long edges continuously until it has unit length.
 		 * @param {Object} srcNode source node
 		 */
 		splitLongEdges: function(srcNode) {
