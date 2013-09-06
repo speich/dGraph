@@ -8,11 +8,12 @@ at least the two properties 'label' and 'layer'. See the two provided example pa
 [example-simple.htm](example-simple.htm) and [example-complex.htm](example-complex.htm) for more information.
 
 ## Features
-* Client side rendering of the graph in SVG
-* Mesh size of the grid can be set
-* Grid can be set to be visible or hidden
-* Graph can be compacted to save space on the screen (default)
+* Client side rendering of the graph in SVG.
+* Mesh size of the grid can be set.
+* Grid can be set to be visible or hidden.
+* Graph can be compacted to save space on the screen (default).
 * Simple data format consisting of a node list and an adjacency list.
+* Graph can be inverted, e.g order of layers in graph is reversed.
 
 ## Dependencies
 * dojo toolkit 1.9.1, mainly for the AMD loader to required in the modules
