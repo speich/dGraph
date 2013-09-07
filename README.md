@@ -10,7 +10,7 @@ at least the two properties 'label' and 'layer'. See the two provided example pa
 ![example-complex](graph/resources/example-complex.gif "complex example of a graph drawing")
 
 ## History
-Originally developed for the Data Analysis Software NAFIDAS of the [Swiss National Forest Inventory](http://www.lfi.ch)
+Originally developed for the Data Analysis Software NAFIDAS of the [Swiss National Forest Inventory](http://www.lfi.ch/index-en.php)
 to visualize dependencies of database variables.
 
 ## Features
