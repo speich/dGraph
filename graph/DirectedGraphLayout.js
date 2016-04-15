@@ -1,63 +1,112 @@
 /**
- * @license
- * This file is part of the DirectedGraph library.
- *
- * The DirectedGraph library is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * The DirectedGraph library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with DirectedGraph Application.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Copyright Simon Speich, 2013
- * written for Swiss Federal Institute for Forest, Snow and Landscape Research WSL
+ * @module dgraph/DirectedGraphLayout
  */
 
-
-/**
- * Module to generate a directed graph layout using a Sugiyama based algorithm.
- * @module graph/DirectedGraphLayout
- * @see graph.DirectedGraphLayout
- */
 define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 	"use strict";
 
 	/**
 	 * Generate a directed graph layout using a Sugiyama algorithm.
+	 * @copyright Simon Speich 2013
 	 *
-	 * Note: The methods expandNodeList(), splitLongEdges() orderLayer(), and updateEdgeIndexes()
+	 * @license
+	 * This file is part of the DirectedGraph library.
+	 *
+	 * The DirectedGraph library is free software: you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation, either version 3 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * The DirectedGraph library is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with DirectedGraph Application.  If not, see <http://www.gnu.org/licenses/>.
+	 *
+	 * written for Swiss Federal Institute for Forest, Snow and Landscape Research WSL
+	 *
+	 * @note The methods expandNodeList(), splitLongEdges() orderLayer(), and updateEdgeIndexes()
 	 * work only with integers. Compacting the graph with compact allows for x values smaller
 	 * than unit size one. Therefore the order of applying these methods is important.
-	 * @class graph.DirectedGraphLayout
-	 * @property {Integer} numLayer number of layers in graph
-	 * @property {Integer} maxNodesAllLayers maximum number of nodes on all layers
-	 * @property {Array} numPerLayers fast lookup to assign new x coordinates for virtual nodes
-	 * @property {Array} nodes holds graph nodes. NOTE: first dim is y, second is x!
-	 * @property {Number} incVirt increment between virtual nodes when setting layout position. 1/incVirt has to be an integer.
-	 * @property {Integer} inc increment between nodes when setting layout position
-	 * @property {Integer} numRepeat number of passes when compacting graph
-	 * @property {Boolean} compacted compact graph
+	 *
+	 * @class module:dgraph/DirectedGraphLayout
 	 */
-	return declare(null, /** @lends graph.DirectedGraphLayout.prototype */ {
+	return declare(null, /** @lends module:dgraph/DirectedGraphLayout# */ {
+
+		/**
+		 * @typedef {Object} graphNode
+		 *	@property {Number} x x-coordinate of unit length
+		 * @property {Number} y y-coordinate of unit length
+		 * @property {Number} lx x-coordinate of layout
+		 * @property {Number} ly y-coordinate of layout
+		 * @property {Array} trgNodes list of adjacent target nodes
+		 * @property {Array} srcNodes list of adjacent source nodes
+		 * @property {Number} wUpper weight of target nodes (upper nodes),
+		 * @property {Number} wLower weight of source nodes {lower nodes),
+		 *	@property {Boolean} virt is node virtual
+		 * @property {String} label label to display at node
+		 * @property {Boolean} isRaw is node from raw data or derived data
+		 * @property {Boolean} selected is node selected (base node of graph)
+		 */
 
 		/* NOTES:
 		 * Remember that in js arrays are passed by reference and so are objects.
 		 * There is a tradeoff between separation of logic and performance:
 		 * More separation means looping through the same loops again which reduces performance but plays nice with memory
 		 */
+
+		/**
+		 * number of layers in graph
+		 * @member {Number}
+		 */
 		numLayer: 0,
+
+		/**
+		 * maximum number of nodes on all layers
+		 * @member Number}
+		 */
 		maxNodesAllLayers: 0,
+
+		/**
+		 * fast lookup to assign new x coordinates for virtual nodes
+		 * @member {Array}
+		 */
 		numPerLayers: null,
+
+		/**
+		 * holds graph nodes. NOTE: first dim is y, second is x!
+		 * @member {Array}
+		 */
 		nodes: null,
+
+		/**
+		 * Increment between virtual nodes when setting layout position. 1/incVirt has to be an integer.
+		 * @member {Number}
+		 * @default
+		 */
 		incVirt: 0.2,
+
+		/**
+		 * Increment between nodes when setting layout position.
+		 * @member {Number}
+		 * @default
+		 */
 		inc: 1,
+
+		/**
+		 * number of passes when compacting graph
+		 * @member {Number}
+		 * @default
+		 */
 		numRepeat: 20,
+
+		/**
+		 * compact graph
+		 * @member {Boolean}
+		 * @default
+		 */
 		compacted: true,
 
 		constructor: function(args) {
@@ -67,11 +116,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 		},
 
 		/**
-		 * Maps the node list to a two dim array the size of the grid.
-		 * nodes are stored as xy vectors of the grid. The grid is
+		 * Maps the list of nodes to a two dim array the size of the grid.
+		 * Nodes are stored as xy vectors of the grid. The grid is
 		 * maxNodesAllLayers x numLayer and dynamically extended with virtual nodes
 		 * when splitting long edges.
-		 * @param {Array} nodeList list of nodes
+		 * TODO: remove unused property isRaw
+		 * @param {Array} nodeList list with nodes
 		 */
 		initNodeList: function(nodeList) {
 			var i, len, layer, col, node;
@@ -114,9 +164,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 
 		/**
 		 * Adds a node's edges.
-		 * Adds a node's neighbours as a list of source and target nodes
-		 * @param {Array} nodeList
-		 * @param {Array} adjList list
+		 * Adds a node's neighbours as a list of array indexes of source and target nodes.
+		 * @param {Array} nodeList list with nodes
+		 * @param {Array} adjList list list of adjacent node indexes
 		 */
 		addEdges: function(nodeList, adjList) {
 			var i, j, len, lenJ, target, source,
@@ -188,7 +238,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 		 * Inserts virtual nodes and edges to create a proper graph.
 		 * Edges spanning more than one layer will be split into multiple edges of unit length.
 		 * This is done by shortening, e.g decrementing long edges continuously until it has unit length.
-		 * @param {Object} srcNode source node
+		 * @param {graphNode} srcNode source node
 		 */
 		splitLongEdges: function(srcNode) {
 			var f, lenF, w, l,
@@ -247,24 +297,24 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 		},
 
 		/**
-		 *  Creates and returns a GraphNode.
+		 *  Creates and returns a graphNode.
 		 * @param {Object} params node parameter
-		 *	@property {Number} x x-coordinate of unit length
-		 * @property {Number} y y-coordinate of unit length
-		 * @property {Number} lx x-coordinate of layout
-		 * @property {Number} ly y-coordinate of layout
-		 * @property {Array} trgNodes list of adjacent target nodes
-		 * @property {Array} srcNodes list of adjacent source nodes
-		 * @property {Number} wUpper weight of target nodes (upper nodes),
-		 * @property {Number} wLower weight of source nodes {lower nodes),
-		 *	@property {Boolean} virt is node virtual
-		 * @property {String} label label to display at node
-		 * @property {Boolean} isRaw is node from raw data or derived data
-		 * @property {Boolean} selected is node selected (base node of graph)
-		 * @returns {GraphNode|VirtualNode}
+		 *	@property {Number}	x x-coordinate of unit length
+		 * @property {Number}	y y-coordinate of unit length
+		 * @property {Number}	lx x-coordinate of layout
+		 * @property {Number}	ly y-coordinate of layout
+		 * @property {Array}		trgNodes list of adjacent target nodes
+		 * @property {Array}		srcNodes list of adjacent source nodes
+		 * @property {Number}	wUpper weight of target nodes (upper nodes),
+		 * @property {Number}	wLower weight of source nodes {lower nodes),
+		 *	@property {Boolean}	virt is node virtual
+		 * @property {String}	label label to display at node
+		 * @property {Boolean}	isRaw is node from raw data or derived data
+		 * @property {Boolean}	selected is node selected (base node of graph)
+		 * @returns {graphNode}
 		 */
 		createNode: function(params) {
-			var GraphNode = {
+			var graphNode = {
 				x: 'x' in params ? params.x : 0,
 				y: 'y' in params ? params.y : 0,
 				lx: 'lx' in params ? params.lx : ('x' in params ? params.x : 0),
@@ -279,18 +329,19 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 				selected: 'selected' in params ? params.selected : false
 			};
 			if ('id' in params) {
-				GraphNode.id = params.id;
+				graphNode.id = params.id;
 			}
-			return GraphNode;
+			
+			return graphNode;
 		},
 
 		/**
 		 * Creates a new virtual node.
 		 * New virtual nodes are appended to the layer, e.g x equals number of nodes on this layer
-		 * @param {GraphNode} srcNode source node
-		 * @param {GraphNode} trgNode target node
+		 * @param {graphNode} srcNode source node
+		 * @param {graphNode} trgNode target node
 		 * @param {Number} span length of span in unit length
-		 * @returns {VirtualNode}
+		 * @returns {graphNode}
 		 */
 		createVirtualNode: function(srcNode, trgNode, span) {
 			// we have 4 cases: target is a VirtualNode
@@ -591,9 +642,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 		},
 
 		/**
-		 * Compares the upper weight of two GraphNodes.
-		 * @param {GraphNode} a
-		 * @param {GraphNode} b
+		 * Compares the upper weight of two graph nodes.
+		 * @param {graphNode} a
+		 * @param {graphNode} b
 		 */
 		compareByUpperWeight: function(a, b) {
 			if (a.wUpper === null || b.wUpper === null) {
@@ -603,9 +654,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 		},
 
 		/**
-		 * Compares the lower weight of two GraphNodes.
-		 * @param {GraphNode} a
-		 * @param {GraphNode} b
+		 * Compares the lower weight of two graph nodes.
+		 * @param {graphNode} a
+		 * @param {graphNode} b
 		 */
 		compareByLowerWeight: function(a, b) {
 			if (a.wLower === null || b.wLower === null) {
@@ -622,10 +673,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 			// since graph might have changed in the meantime we
 			// have to recalculate this every time
 			var stat = {
-				nodesTotal: 0,
-				nodesDerived: 0,
-				nodesRaw: 0,
-				edges: 0
+					nodesTotal: 0,
+					nodesDerived: 0,
+					nodesRaw: 0,
+					edges: 0
 				},
 				node,
 				z, lenZ, i, len, j, lenJ;
@@ -777,6 +828,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang'], function(declare, lang) {
 
 		/**
 		 * Convenience function to render graph.
+		 * Generates the nodes list and edges.
 		 * @param {Object} graphData
 		 * @param {Object} graphData.nodeList
 		 * @param {Object} graphData.adjList

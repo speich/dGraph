@@ -1,19 +1,18 @@
 /**
  * Module containing CSS helper functions to work with svg.
+ * 
  * Note: dojo/dom-class does not work with svg elements, because in SVG,
  * className is defined as type SVGAnimatedString -> use getAttribute instead of className
- * @module graph/svgCssUtil
+ * @see https://bugs.dojotoolkit.org/ticket/16309
+ * @module dgraph/svgCssUtil
  */
 define(function() {
 
-	/**
-	 * @alias module:graph/svgCssUtil
-	 */
-	return {
+	return /** @lends module:dgraph/svgCssUtil */ {
 
 		/**
 		 * Add a class name to the class attribute.
-		 * @param {Object} element
+		 * @param {HTMLElement|SVGElement} element
 		 * @param {String} className
 		 * @param {Boolean} [overwrite] adds by default
 		 */
@@ -25,13 +24,18 @@ define(function() {
 			element.setAttribute('class', className);
 		},
 
+		/**
+		 * Returns the class attribute
+		 * @param {HTMLElement|SVGElement} element
+		 * @return {string}
+		 */
 		getClass: function(element) {
 			return element.getAttribute('class');
 		},
 
 		/**
 		 * Remove a class name from class attribute
-		 * @param element
+		 * @param {HTMLElement|SVGElement} element
 		 * @param className
 		 */
 		remove: function(element, className) {
@@ -51,7 +55,7 @@ define(function() {
 		/**
 		 * Checks element for given class.
 		 * ClassName can be an array to check for multiple classes.
-		 * @param {Object} element DOMElement
+		 * @param {HTMLElement|SVGElement} element
 		 * @param {Array|String} className
 		 */
 		has: function(element, className) {
@@ -79,7 +83,7 @@ define(function() {
 
 		/**
 		 * Adds a class to node if not present, or removes if present.
-		 * @param element
+		 * @param {HTMLElement|SVGElement} element
 		 * @param className
 		 */
 		toggle: function(element, className) {

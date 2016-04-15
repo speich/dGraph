@@ -1,22 +1,21 @@
 /**
  * Module contains utility to search graph nodes.
- * developed by Simon Speich
- * copyright: Simon Speich
+ *
  * You can use and change this freely as long as you keep this note.
- * @module graph/pathFinder
+ * @copyright: Simon Speich, 2013
+ *
+ * Note: Can't use dojo/dom-class since SVGElements are not supported
+ * @see https://bugs.dojotoolkit.org/ticket/16309
+ * @module dgraph/pathFinder
  */
-define(['graph/svgCssUtil']/* note: can't use dojo/dom-class since SVGElements are not supported */, function(svgCssUtil) {
+define(['dgraph/svgCssUtil'], function(svgCssUtil) {
 	"use strict";
 
-	/**
-	 * Utility to search graph nodes.
-	 * @alias module:graph/pathFinder
-	 */
-	return {
+	return /** @lends module:dgraph/pathFinder */ {
 
 		/**
-		 * Find connected target nodes using a BFS search.
-		 * @param {GraphNode} node graph node
+		 * Find connected target nodes using a breadth first search (BFS) search.
+		 * @param {graphNode} node graph node
 		 * @param {Array} nodelist list of graph nodes
 		 * @param {Function} fnc callback
 		 */
@@ -39,8 +38,8 @@ define(['graph/svgCssUtil']/* note: can't use dojo/dom-class since SVGElements a
 		},
 
 		/**
-		 * Find connected source nodes using a BFS search.
-		 * @param {GraphNode} node graph node
+		 * Find connected source nodes using a breadth first search (BFS) search.
+		 * @param {graphNode} node graph node
 		 * @param {Array} nodelist list of graph nodes
 		 * @param {Function} fnc callback
 		 */
@@ -64,7 +63,7 @@ define(['graph/svgCssUtil']/* note: can't use dojo/dom-class since SVGElements a
 
 		/**
 		 * Highlight all connected edges.
-		 * @param {GraphNode} node graph node
+		 * @param {graphNode} node graph node
 		 * @param {Array} nodelist list of graph nodes
 		 */
 		highlightPath: function(node, nodelist) {

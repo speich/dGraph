@@ -1,35 +1,54 @@
 /**
  * Module to generate a directed graph layout using a Sugiyama algorithm.
- * @module graph/svgRenderer
+ * @module dgraph/SvgRenderer
  */
-define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(lang, declare, svgCssUtil) {
+define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(lang, declare, svgCssUtil) {
 	"use strict";
 
 	var d = document;
 
 	/**
 	 * Returns an object to create the SVG of the directed graph.
-	 * @alias module:graph/svgRenderer
-	 * @property {String} canvas id of HTMLDivElement to be used as canvas
-	 * @property {SVGElement} svg svg element
-	 * @property {SVGNamespace} svgNs svg namespace
-	 * @property {Object} gridSize holds the properties meshWidht and meshHeight
-	 * @property {Boolean} invert invert rendering direction of graph
+	 * @class module:dgraph/SvgRenderer
 	 * @param {Object} args parameters
-	 * @property {String} canvas name of HTMLElement to append svg to
-	 * @property {Number} meshWidth width of grid mesh
-	 * @property {Number} meshHeight height of grid mesh
-	 * @property {Boolean} [invert] renders the graph inverted
-	 * @returns {graph/SvgRenderer}
+	 * @param {String} args.canvas name of HTMLElement to be used as canvas
+	 * @param {Object} args.gridSize grid dimensions
+	 * @param {Number} args.gridSize.meshWidth width of grid mesh
+	 * @param {Number} args.gridSize.meshHeight height of grid mesh
+	 * @param {Boolean} [args.renderGrid] render the grid
+	 * @param {Boolean} [args.invert] render the graph inverted
 	 */
-
-	return declare(null, {
-
+	return declare(null, /** @lends module:dgraph/SvgRenderer# */{
+	
 		canvas: null,
+
+		/**
+		 * reference to svg element
+		 * @member {null|SVGElement}
+		 * @default null
+		 */
 		svg: null,
+
+		/**
+		 * svg namespace
+		 * @member {String}
+		 * @default
+		 */
 		svgNs: 'http://www.w3.org/2000/svg',
 		invert: false,
+
+		/**
+		 * label prefix of the grid x-lines
+		 * @member {string}
+		 * @default
+		 */
 		gridLabel: 'layer',
+
+		/**
+		 * render the grid.
+		 * @member {Boolean}
+		 * @default
+		 */
 		renderGrid: true,
 
 		constructor: function(args) {
@@ -40,8 +59,8 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(l
 
 		/**
 		 * Creates the SVG canvas.
-		 * @param {Integer} width width of svg canvas
-		 * @param {Integer} height height of svg canvas
+		 * @param {Number} width width of svg canvas
+		 * @param {Number} height height of svg canvas
 		 */
 		initSVG: function(width, height) {
 			this.svg = d.createElementNS(this.svgNs, 'svg');
@@ -57,12 +76,9 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(l
 		},
 
 		/**
-		 * Creates a graph node.
-		 * @param {Object} node
-		 * @param {Object} node.lx
-		 * @param {Object} node.ly
-		 * @param {Object} node.label
-		 * @return {SVGGElement} svg group element
+		 * Creates a svg graph node.
+		 * @param {graphNode} node		 
+		 * @return {SVGElement} svg group element
 		 */
 		createNode: function(node) {
 			var text, dist, tspan, circle,
@@ -94,9 +110,9 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(l
 
 		/**
 		 * Draws the node on the canvas.
-		 * @param {Object} node GraphNode
+		 * @param {graphNode} node
 		 * @param {Array} nodes graph node list
-		 * @return {Object} GraphNode
+		 * @return {graphNode} node
 		 */
 		drawNode: function(node, nodes) {
 			var x, y, shift = 1;
@@ -115,9 +131,11 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(l
 
 		/**
 		 * Draws the grid on the canvas.
-		 * Note: After using compact we can not simply calculated
+		 * Note: After using compact we can not simply calculate
 		 * the width from the number of nodes per layer.
 		 * The height is calculated from the number of layers.
+		 * @param {Number} width width of the grid
+		 * @param {Number} height height of the grid
 		 */
 		drawGrid: function(width, height) {
 			var i, text, level,
@@ -193,8 +211,8 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'graph/svgCssUtil'], function(l
 		/**
 		 * Draws the edge on the canvas.
 		 * The edge is drawn from node1 to node2 with arrow head.
-		 * @param {Object} node1 GraphNode
-		 * @param {Object} node2 GraphNode
+		 * @param {graphNode} node1 start node
+		 * @param {graphNode} node2 end node
 		 * @param {Object} arrow SVGMarker
 		 * @param {Array} nodes graph node list
 		 * @return {Object} edge
