@@ -2,13 +2,12 @@
  * Module to generate a directed graph layout using a Sugiyama algorithm.
  * @module dgraph/SvgRenderer
  */
-define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(lang, declare, svgCssUtil) {
-	"use strict";
+import {svgCssUtil} from "./svgCssUtil.js";
 
-	var d = document;
+let d = document;
 
-	/**
-	 * Returns an object to create the SVG of the directed graph.
+/**
+	 * Returns an class to create the SVG of the directed graph.
 	 * @class module:dgraph/SvgRenderer
 	 * @param {Object} args parameters
 	 * @param {String} args.canvas name of HTMLElement to be used as canvas
@@ -18,51 +17,53 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 	 * @param {Boolean} [args.renderGrid] render the grid
 	 * @param {Boolean} [args.invert] render the graph inverted
 	 */
-	return declare(null, /** @lends module:dgraph/SvgRenderer# */{
+	export class SvgRenderer {
 	
-		canvas: null,
+		constructor(args) {
+
+		this.canvas = null;
 
 		/**
 		 * reference to svg element
 		 * @member {null|SVGElement}
 		 * @default null
 		 */
-		svg: null,
+		this.svg = null;
 
 		/**
 		 * svg namespace
 		 * @member {String}
 		 * @default
 		 */
-		svgNs: 'http://www.w3.org/2000/svg',
-		invert: false,
+		this.svgNs = 'http://www.w3.org/2000/svg';
+
+		this.invert = false;
 
 		/**
 		 * label prefix of the grid x-lines
 		 * @member {string}
 		 * @default
 		 */
-		gridLabel: 'layer',
+		this.gridLabel = 'layer';
 
 		/**
 		 * render the grid.
 		 * @member {Boolean}
 		 * @default
 		 */
-		renderGrid: true,
+		this.renderGrid = true;
 
-		constructor: function(args) {
-			lang.mixin(this, args);
+		Object.assign(this, args);
 
 			this.canvas = d.getElementById(args.canvas);
-		},
+		}
 
 		/**
 		 * Creates the SVG canvas.
 		 * @param {Number} width width of svg canvas
 		 * @param {Number} height height of svg canvas
 		 */
-		initSVG: function(width, height) {
+		initSVG(width, height) {
 			this.svg = d.createElementNS(this.svgNs, 'svg');
 			this.svg.setAttribute('version', '1.1');
 			this.svg.setAttribute('width', width);
@@ -73,14 +74,14 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 			this.svgRoot = d.createElementNS(this.svgNs, 'g');	// holds all nodes and edges for simple transformation
 			this.svg.appendChild(this.svgRoot);
 			this.canvas.appendChild(this.svg);
-		},
+		}
 
 		/**
 		 * Creates a svg graph node.
 		 * @param {graphNode} node		 
 		 * @return {SVGElement} svg group element
 		 */
-		createNode: function(node) {
+		createNode(node) {
 			var text, dist, tspan, circle,
 				group = d.createElementNS(this.svgNs, 'g');
 
@@ -106,7 +107,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 			group.appendChild(text);
 
 			return group;
-		},
+		}
 
 		/**
 		 * Draws the node on the canvas.
@@ -114,7 +115,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 		 * @param {Array} nodes graph node list
 		 * @return {graphNode} node
 		 */
-		drawNode: function(node, nodes) {
+		drawNode(node, nodes) {
 			var x, y, shift = 1;
 
 			x = (shift + Number(node.getAttribute('cx'))) * this.gridSize.meshWidth;
@@ -127,7 +128,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 			node.setAttribute('transform', 'translate(' + x + ',' + y + ')');
 			this.svgRoot.appendChild(node);
 			return node;
-		},
+		}
 
 		/**
 		 * Draws the grid on the canvas.
@@ -137,7 +138,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 		 * @param {Number} width width of the grid
 		 * @param {Number} height height of the grid
 		 */
-		drawGrid: function(width, height) {
+		drawGrid(width, height) {
 			var i, text, level,
 				numVertical = width / this.gridSize.meshWidth + 1,
 				numHorizontal = height / this.gridSize.meshHeight;
@@ -158,7 +159,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 			for (i = 1; i < numVertical + 1; i++) {
 				this.drawLine(i, 0, i, height);
 			}
-		},
+		}
 
 		/**
 		 * Draws a line on the canvas.
@@ -168,7 +169,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 		 * @param {Number} y2 y-coord of line end
 		 * @return {Object} SVGLine
 		 */
-		drawLine: function(x1, y1, x2, y2) {
+		drawLine(x1, y1, x2, y2) {
 			var width = this.gridSize.meshWidth,
 				height = this.gridSize.meshHeight,
 				line = d.createElementNS(this.svgNs, 'line');
@@ -179,7 +180,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 			line.setAttribute('y2', y2 * height);
 			this.svgRoot.appendChild(line);
 			return line;
-		},
+		}
 
 		/**
 		 * Creates a reusable arrow head.
@@ -188,7 +189,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 		 * @param {String} id id of marker
 		 * @return {Object} SVGMarker
 		 */
-		createArrowHead: function(id) {
+		createArrowHead(id) {
 			var p, nodeRadius,
 				marker = document.createElementNS(this.svgNs, 'marker');
 
@@ -206,7 +207,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 			marker.appendChild(p);
 			this.defs.appendChild(marker);
 			return marker;
-		},
+		}
 
 		/**
 		 * Draws the edge on the canvas.
@@ -217,7 +218,7 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 		 * @param {Array} nodes graph node list
 		 * @return {Object} edge
 		 */
-		drawEdge: function(node1, node2, arrow, nodes) {
+		drawEdge(node1, node2, arrow, nodes) {
 			var x1, x2, y1, y2,
 				shift = 1,
 				width = this.gridSize.meshWidth,
@@ -241,13 +242,13 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 			}
 			this.svgRoot.appendChild(edge);
 			return edge;
-		},
+		}
 
 		/**
 		 * Places the nodes on the canvas.
 		 * @param {Array} nodes graph nodes list
 		 */
-		placeNodes: function(nodes) {
+		placeNodes(nodes) {
 			var i, numRow = nodes.length,
 				j, numCol, node, svgNode;
 
@@ -261,13 +262,13 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 					}
 				}
 			}
-		},
+		}
 
 		/**
 		 * Places the edges on the canvas.
 		 * @param {Array} nodes graph node list
 		 */
-		placeEdges: function(nodes) {
+		placeEdges(nodes) {
 			var i, j, l, z, x, y, adjNode, numCol, node,
 				numRow = nodes.length,
 				arrow = this.createArrowHead('arrow');
@@ -288,22 +289,22 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 					}
 				}
 			}
-		},
+		}
 
 		/**
 		 * Clear the canvas.
 		 */
-		clearCanvas: function() {
+		clearCanvas() {
 			if (this.canvas) {
 				this.canvas.innerHTML = '';
 			}
-		},
+		}
 
 		/**
 		 * Render graph as SVG.
 		 * @param {Object} graph
 		 */
-		render: function(graph) {
+		render(graph) {
 			var width = (graph.getGraphWidth() + 1) * this.gridSize.meshWidth,
 				height = this.gridSize.meshHeight * (graph.numLayer + 1);
 
@@ -314,5 +315,4 @@ define(['dojo/_base/lang', 'dojo/_base/declare', 'dgraph/svgCssUtil'], function(
 			this.placeEdges(graph.nodes);
 			this.placeNodes(graph.nodes);
 		}
-	});
-});
+	}

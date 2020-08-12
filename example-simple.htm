@@ -3,68 +3,13 @@
 <head>
 <title>Example of a simple Layered DirectedGraph</title>
 <link href="graph/resources/dgraph.css" type="text/css" rel="stylesheet">
-<style type="text/css">
-#graphCanvas {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 11px;
-}
-</style>
+<link rel="stylesheet" href="graph/resources/example.css">
+<script src="example-simple.js" type="module"></script>
 </head>
 
 <body class="dgraph">
 <div id="graphCanvas"></div>
-<script type="text/javascript">
-var dojoConfig = {
-	async: true,
-	packages: [
-		{name: 'dgraph', location: '/graph'}
-	]
-};
-</script>
-<script src="//ajax.googleapis.com/ajax/libs/dojo/1.14.1/dojo/dojo.js"></script>
-<script type="text/javascript">
-require([
-	'dgraph/DirectedGraphLayout',
-	'dgraph/SvgRenderer',
-  'dojo/domReady!'
-], function(DirectedGraphLayout, SvgRenderer) {
-    var graph, svg,
-        graphData = {
-            numLayer: 4,
-            maxPerLayer: 2,
-            nodeList: [
-                { label: 'Rubecula', layer: 0 },
-                { label: 'Turdus', layer: 3 },
-                { label: 'Corvus', layer: 1 },
-                { label: 'Falco', layer: 1 },
-                { label: 'Cathartes', layer: 2 },
-                { label: 'Parus', layer: 0 }
-            ],
-            adjList: [
-                [2,3,4],
-                [],
-                [1],
-                [],
-                [],
-                [2]
-            ]
-        };
 
-    graph = new DirectedGraphLayout({
-        numLayer: graphData.numLayer,
-        compacted: false
-    });
-    svg = new SvgRenderer({
-        canvas: 'graphCanvas',
-        gridSize: {
-            meshWidth: 100,
-            meshHeight: 100
-        }
-    });
-
-    graph.render(graphData);
-    svg.render(graph);
-});
 </script>
 </body>
 </html>
