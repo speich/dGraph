@@ -17,16 +17,16 @@
 var dojoConfig = {
 	async: true,
 	packages: [
-		{name: 'dgraph', location: '/library/dgraph/graph'}
+		{name: 'dgraph', location: '/graph'}
 	]
 };
 </script>
-<script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/dojo/1.14.1/dojo/dojo.js"></script>
 <script type="text/javascript">
 require([
 	'dgraph/DirectedGraphLayout',
 	'dgraph/SvgRenderer',
-    'dojo/domReady!'
+  'dojo/domReady!'
 ], function (DirectedGraphLayout, SvgRenderer) {
     var graph, svg,
         graphData = { numLayer: 10, maxPerLayer: 3, nodeList: [
