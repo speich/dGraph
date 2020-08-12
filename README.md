@@ -16,14 +16,14 @@ to visualize dependencies of database variables.
 ## Features
 * Client side rendering of the graph in SVG.
 * Mesh size of the grid can be set.
-* Grid can be set to be visible or hidden.
+* Grid lines can be set to visible or hidden.
 * Graph can be compacted to save space on the screen (default).
 * Simple data format consisting of a node list and an adjacency list.
 * Graph can be inverted, e.g. order of layers in graph is reversed.
 * Highlight connected parent and/or child nodes
 
 ## Dependencies
-* dojo toolkit 1.9.1, mainly for the AMD loader to require in the modules
+* none, uses only native JS
 
 ## Installation
 See the two example pages [example-simple.htm](example-simple.htm) and [example-complex.htm](example-complex.htm)
